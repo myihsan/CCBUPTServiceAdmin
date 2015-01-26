@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
@@ -49,8 +50,9 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        int teacherId = getPreferences(Context.MODE_PRIVATE)
+        int teacherId = PreferenceManager.getDefaultSharedPreferences(this)
                 .getInt(getString(R.string.logged_teacher_id), -1);
+        Log.d(TAG,teacherId+"");
         if (teacherId != -1) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
@@ -230,7 +232,7 @@ public class LoginActivity extends BaseActivity {
                 int teacherId = jsonObject.getInt("teacher_id");
                 if (teacherId != -1) {
                     success = true;
-                    getPreferences(Context.MODE_PRIVATE)
+                    PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
                             .edit()
                             .putInt(getString(R.string.logged_teacher_id), teacherId)
                             .commit();

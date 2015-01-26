@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="75dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+
+    <TextView
+        android:id="@+id/notice_list_item_titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        tools:text="通知标题预览"
+        android:textColor="@color/body_text_1"
+        />
+
+    <TextView
+        android:id="@+id/notice_list_item_dateTimeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/notice_list_item_titleTextView"
+        android:textSize="12sp"
+        android:textColor="@color/caption_text"
+        tools:text="2015-01-23 15:51:02"/>
+
+</RelativeLayout>
