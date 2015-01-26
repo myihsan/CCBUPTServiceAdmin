@@ -3,6 +3,8 @@ package com.l3.android.ccbuptserviceadmin;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 
@@ -47,6 +49,13 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        int teacherId = getPreferences(Context.MODE_PRIVATE)
+                .getInt(getString(R.string.logged_teacher_id), -1);
+        if (teacherId != -1) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -221,6 +230,10 @@ public class LoginActivity extends BaseActivity {
                 int teacherId = jsonObject.getInt("teacher_id");
                 if (teacherId != -1) {
                     success = true;
+                    getPreferences(Context.MODE_PRIVATE)
+                            .edit()
+                            .putInt(getString(R.string.logged_teacher_id), teacherId)
+                            .commit();
                     Log.d(TAG, "teacher_id: " + teacherId);
                     JSONArray jsonArray = jsonObject.getJSONArray("authority");
                     for (int i = 0; i < jsonArray.length(); i++) {
@@ -234,7 +247,8 @@ public class LoginActivity extends BaseActivity {
             }
 
             if (success) {
-
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
