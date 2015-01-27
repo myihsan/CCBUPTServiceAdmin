@@ -1,36 +1,44 @@
 package com.l3.android.ccbuptserviceadmin;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ListFragment;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.melnykov.fab.FloatingActionButton;
+
 import java.util.ArrayList;
 
 /**
  * Created by Ihsan on 15/1/23.
  */
-public class NoticeListFragment extends ListFragment {
+public class NoticeListFragment extends Fragment {
     private static final String TAG = "NoticeListFragment";
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        new FetchNoticeTask().execute();
+    private ListView mListView;
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_notice_list, container, false);
+        mListView = (ListView)view.findViewById(R.id.notice_list_listView);
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.notice_list_fab);
+        fab.attachToListView(mListView);
+        new FetchNoticeTask().execute();
+        return view;
     }
 
     public void setupAdapter() {
         NoticeAdapter adapter = new NoticeAdapter(NoticeArray.get(getActivity()).getNotices());
-        setListAdapter(adapter);
+        mListView.setAdapter(adapter);
     }
 
     private class FetchNoticeTask extends AsyncTask<Void, Void, ArrayList<Notice>> {
@@ -38,7 +46,7 @@ public class NoticeListFragment extends ListFragment {
         protected ArrayList<Notice> doInBackground(Void... params) {
             int teacherId = PreferenceManager.getDefaultSharedPreferences(getActivity())
                     .getInt(getString(R.string.logged_teacher_id), -1);
-            Log.d(TAG,teacherId+"");
+            Log.d(TAG, teacherId + "");
             if (teacherId != -1) {
                 return new NoticeFetcher().fetchNoticeByTeacherId(teacherId);
             }

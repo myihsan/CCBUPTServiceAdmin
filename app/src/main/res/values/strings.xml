@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">CCBUPTServiceAdmin</string>
-    <string name="logged_teacher_id">com.l3.android.ccbuptserviceadmin.LOGGED_TEACHER_ID</string>
+    <string name="logged_teacher_id"></string>
 </resources>
