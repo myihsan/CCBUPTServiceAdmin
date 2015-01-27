@@ -55,7 +55,7 @@ public class NoticeListFragment extends Fragment {
 
         @Override
         protected void onPostExecute(ArrayList<Notice> notices) {
-            NoticeArray.get(getActivity()).addNotices(0, notices);
+            NoticeArray.get(getActivity()).refreshNotices(0, notices);
             setupAdapter();
         }
     }

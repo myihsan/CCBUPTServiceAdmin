@@ -38,7 +38,8 @@ public class NoticeArray {
         return null;
     }
 
-    public void addNotices(int position, ArrayList<Notice> notices) {
+    public void refreshNotices(int position, ArrayList<Notice> notices) {
+        mNotices.clear();
         mNotices.addAll(position, notices);
     }
 }
