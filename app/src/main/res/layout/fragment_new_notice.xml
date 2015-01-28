@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/new_notice_linearLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginTop="16dp"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/new_notice_titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:hint="@string/new_notice_title_hint"
+        android:textColor="@color/body_text_1"
+        android:textSize="20sp"
+        />
+
+    <EditText
+        android:id="@+id/new_notice_contentTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/new_notice_content_hint"
+        android:inputType="textMultiLine"
+        android:paddingTop="16dp"
+        android:textColor="@color/body_text_1"
+        />
+
+    <TextView
+        style="?android:listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/new_notice_target_label"/>
+
+
+</LinearLayout>

@@ -29,6 +29,9 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -52,7 +55,7 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         int teacherId = PreferenceManager.getDefaultSharedPreferences(this)
                 .getInt(getString(R.string.logged_teacher_id), -1);
-        Log.d(TAG,teacherId+"");
+        Log.d(TAG, teacherId + "");
         if (teacherId != -1) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
@@ -237,10 +240,15 @@ public class LoginActivity extends BaseActivity {
                             .putInt(getString(R.string.logged_teacher_id), teacherId)
                             .commit();
                     Log.d(TAG, "teacher_id: " + teacherId);
-                    JSONArray jsonArray = jsonObject.getJSONArray("authority");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        authority.add(jsonArray.getString(i));
-                        Log.d(TAG, "authority: " + jsonArray.getString(i));
+                    JSONArray authorityJsonArray = jsonObject.getJSONArray("authority");
+                    for (int i = 0; i < authorityJsonArray.length(); i++) {
+                        authority.add(authorityJsonArray.getString(i));
+                        Log.d(TAG, "authority: " + authorityJsonArray.getString(i));
+                    }
+                    try {
+                        saveAuthority(authorityJsonArray.toString());
+                    }  catch (Exception e) {
+                        Log.e(TAG, "Error saving authority", e);
                     }
                 }
             } catch (JSONException jsone) {
@@ -261,6 +269,21 @@ public class LoginActivity extends BaseActivity {
         protected void onCancelled() {
             mAuthTask = null;
             showProgress(false);
+        }
+
+        private void saveAuthority(String authorityJsonString) throws IOException{
+
+            Writer writer = null;
+            try {
+                OutputStream out = LoginActivity.this
+                        .openFileOutput("authority.json", Context.MODE_PRIVATE);
+                writer = new OutputStreamWriter(out);
+                writer.write(authorityJsonString);
+            } finally {
+                if (writer != null) {
+                    writer.close();
+                }
+            }
         }
 
         private byte[] getUrlBytes(String urlSpec) throws IOException {

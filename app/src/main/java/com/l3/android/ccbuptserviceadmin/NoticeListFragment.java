@@ -1,5 +1,6 @@
 package com.l3.android.ccbuptserviceadmin;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -32,6 +33,13 @@ public class NoticeListFragment extends Fragment {
         mListView = (ListView)view.findViewById(R.id.notice_list_listView);
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.notice_list_fab);
         fab.attachToListView(mListView);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),NoticeActivity.class);
+                startActivity(intent);
+            }
+        });
         new FetchNoticeTask().execute();
         return view;
     }
