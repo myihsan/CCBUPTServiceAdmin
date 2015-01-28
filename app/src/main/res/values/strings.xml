@@ -5,4 +5,6 @@
     <string name="new_notice_content_hint">内容</string>
     <string name="new_notice_target_label">目标</string>
     <string name="action_send">Send</string>
+    <string name="unsent_title">unsentTitle</string>
+    <string name="unsent_content">unsentContent</string>
 </resources>

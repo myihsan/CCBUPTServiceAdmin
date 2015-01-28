@@ -1,6 +1,7 @@
 package com.l3.android.ccbuptserviceadmin;
 
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -41,6 +42,8 @@ public class NewNoticeFragment extends Fragment {
     private EditText mTitleEditText, mContentEditText;
     private ArrayList<CheckBox> mCheckBoxes = new ArrayList<CheckBox>();
 
+    private boolean mIsSent = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +71,32 @@ public class NewNoticeFragment extends Fragment {
             mCheckBoxes.get(i).setText(authority.get(i));
             linearLayout.addView(checkbox);
         }
+        SharedPreferences pre = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        if (pre.contains(getString(R.string.unsent_title))){
+            mTitleEditText.setText(pre.getString(getString(R.string.unsent_title),""));
+        }
+        if (pre.contains(getString(R.string.unsent_content))){
+            mContentEditText.setText(pre.getString(getString(R.string.unsent_content),""));
+        }
         return view;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (!mIsSent) {
+            PreferenceManager.getDefaultSharedPreferences(getActivity())
+                    .edit()
+                    .putString(getString(R.string.unsent_title), mTitleEditText.getText().toString())
+                    .putString(getString(R.string.unsent_content), mContentEditText.getText().toString())
+                    .commit();
+        } else {
+            PreferenceManager.getDefaultSharedPreferences(getActivity())
+                    .edit()
+                    .remove(getString(R.string.unsent_title))
+                    .remove(getString(R.string.unsent_content))
+                    .commit();
+        }
     }
 
     @Override
@@ -125,7 +153,7 @@ public class NewNoticeFragment extends Fragment {
 
         for (CheckBox checkBox : mCheckBoxes) {
             if (checkBox.isChecked()) {
-                url+="&tagList[]="+checkBox.getText().toString();
+                url += "&tagList[]=" + checkBox.getText().toString();
             }
         }
         Log.d(TAG, url);
@@ -170,12 +198,13 @@ public class NewNoticeFragment extends Fragment {
         return new String(getUrlBytes(urlSpec));
     }
 
-    private void showResult(boolean result){
-        if (result){
-            Toast.makeText(getActivity(),"发送成功",Toast.LENGTH_LONG).show();
+    private void showResult(boolean result) {
+        if (result) {
+            mIsSent = true;
+            Toast.makeText(getActivity(), "发送成功", Toast.LENGTH_LONG).show();
             getActivity().finish();
         } else {
-            Toast.makeText(getActivity(),"发送失败，请重试",Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "发送失败，请重试", Toast.LENGTH_LONG).show();
         }
     }
 
