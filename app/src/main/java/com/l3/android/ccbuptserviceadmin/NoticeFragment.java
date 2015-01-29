@@ -36,24 +36,40 @@ import java.util.ArrayList;
 /**
  * Created by Ihsan on 15/1/28.
  */
-public class NewNoticeFragment extends Fragment {
-    private static final String TAG = "NewNoticeFragment";
+public class NoticeFragment extends Fragment {
+    private static final String TAG = "NoticeFragment";
+    public static final String EXTRA_NOTICE_ID =
+            "com.l3.android.ccbuptserviceadmin.notice_id";
 
     private EditText mTitleEditText, mContentEditText;
     private ArrayList<CheckBox> mCheckBoxes = new ArrayList<CheckBox>();
 
+    private int mNoticeId = -1;
     private boolean mIsSent = false;
+
+    public static NoticeFragment newInstance(int id) {
+        Bundle args = new Bundle();
+        args.putInt(EXTRA_NOTICE_ID, id);
+
+        NoticeFragment fragment = new NoticeFragment();
+        fragment.setArguments(args);
+
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments()!=null) {
+            mNoticeId = getArguments().getInt(EXTRA_NOTICE_ID, -1);
+        }
         setHasOptionsMenu(true);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_new_notice, container, false);
+        View view = inflater.inflate(R.layout.fragment_notice, container, false);
         mTitleEditText = (EditText) view.findViewById(R.id.new_notice_titleTextView);
         mContentEditText = (EditText) view.findViewById(R.id.new_notice_contentTextView);
         ArrayList<String> authority = new ArrayList<String>();
@@ -71,13 +87,22 @@ public class NewNoticeFragment extends Fragment {
             mCheckBoxes.get(i).setText(authority.get(i));
             linearLayout.addView(checkbox);
         }
-        SharedPreferences pre = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        if (pre.contains(getString(R.string.unsent_title))){
-            mTitleEditText.setText(pre.getString(getString(R.string.unsent_title),""));
+
+        if (mNoticeId == -1) {
+            SharedPreferences pre = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            if (pre.contains(getString(R.string.unsent_title))) {
+                mTitleEditText.setText(pre.getString(getString(R.string.unsent_title), ""));
+            }
+            if (pre.contains(getString(R.string.unsent_content))) {
+                mContentEditText.setText(pre.getString(getString(R.string.unsent_content), ""));
+            }
+        } else {
+            Notice notice = NoticeArray.get(getActivity()).getNotice(mNoticeId);
+            mTitleEditText.setText(notice.getTitle());
+            mContentEditText.setText(notice.getContent());
+            mIsSent = true;
         }
-        if (pre.contains(getString(R.string.unsent_content))){
-            mContentEditText.setText(pre.getString(getString(R.string.unsent_content),""));
-        }
+
         return view;
     }
 
@@ -158,7 +183,7 @@ public class NewNoticeFragment extends Fragment {
         }
         Log.d(TAG, url);
         try {
-            String result = getUrl(url);
+            String result = new NoticeFetcher().getUrl(url);
             Log.d(TAG, result);
             if (result.equals("succeed")) {
                 flag = true;
@@ -167,35 +192,6 @@ public class NewNoticeFragment extends Fragment {
             Log.e(TAG, "Failed to fetch URL: ", ioe);
         }
         return flag;
-    }
-
-
-    private byte[] getUrlBytes(String urlSpec) throws IOException {
-        URL url = new URL(urlSpec);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-        try {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            InputStream in = connection.getInputStream();
-
-            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                return null;
-            }
-
-            int bytesRead = 0;
-            byte[] buffer = new byte[1024];
-            while ((bytesRead = in.read(buffer)) > 0) {
-                out.write(buffer, 0, bytesRead);
-            }
-            out.close();
-            return out.toByteArray();
-        } finally {
-            connection.disconnect();
-        }
-    }
-
-    private String getUrl(String urlSpec) throws IOException {
-        return new String(getUrlBytes(urlSpec));
     }
 
     private void showResult(boolean result) {
@@ -211,7 +207,11 @@ public class NewNoticeFragment extends Fragment {
     private class sendTask extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected Boolean doInBackground(Void... params) {
-            return sendNotice();
+            if (mNoticeId == -1) {
+                return sendNotice();
+            } else {
+                return false;
+            }
         }
 
         @Override

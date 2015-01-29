@@ -8,6 +8,11 @@ import android.app.Fragment;
 public class NoticeActivity extends SingleFragmentActivity {
     @Override
     protected Fragment createFragment() {
-        return new NewNoticeFragment();
+        int noticeId = getIntent().getIntExtra(NoticeFragment.EXTRA_NOTICE_ID, -1);
+        if (noticeId != -1) {
+            return NoticeFragment.newInstance(noticeId);
+        } else {
+            return new NoticeFragment();
+        }
     }
 }

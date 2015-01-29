@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,6 +32,15 @@ public class NoticeListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notice_list, container, false);
         mListView = (ListView)view.findViewById(R.id.notice_list_listView);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Notice notice = ((NoticeAdapter)mListView.getAdapter()).getItem(position);
+                Intent intent = new Intent(getActivity(),NoticeActivity.class);
+                intent.putExtra(NoticeFragment.EXTRA_NOTICE_ID,notice.getId());
+                startActivity(intent);
+            }
+        });
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.notice_list_fab);
         fab.attachToListView(mListView);
         fab.setOnClickListener(new View.OnClickListener() {
