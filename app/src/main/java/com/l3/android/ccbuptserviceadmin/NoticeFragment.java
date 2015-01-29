@@ -194,6 +194,33 @@ public class NoticeFragment extends Fragment {
         return flag;
     }
 
+    private boolean editNotice() {
+        boolean flag = false;
+        String fetchUrl = "http://10.168.1.124/CCBUPTService/editnotice.php";
+        String url = Uri.parse(fetchUrl).buildUpon()
+                .appendQueryParameter("id",String.valueOf(mNoticeId))
+                .appendQueryParameter("title", mTitleEditText.getText().toString())
+                .appendQueryParameter("content", mContentEditText.getText().toString())
+                .build().toString();
+
+        for (CheckBox checkBox : mCheckBoxes) {
+            if (checkBox.isChecked()) {
+                url += "&tagList[]=" + checkBox.getText().toString();
+            }
+        }
+        Log.d(TAG, "edit: "+url);
+        try {
+            String result = new NoticeFetcher().getUrl(url);
+            Log.d(TAG, result);
+            if (result.equals("succeed")) {
+                flag = true;
+            }
+        } catch (IOException ioe) {
+            Log.e(TAG, "Failed to fetch URL: ", ioe);
+        }
+        return flag;
+    }
+
     private void showResult(boolean result) {
         if (result) {
             mIsSent = true;
@@ -210,7 +237,7 @@ public class NoticeFragment extends Fragment {
             if (mNoticeId == -1) {
                 return sendNotice();
             } else {
-                return false;
+                return editNotice();
             }
         }
 
