@@ -7,4 +7,5 @@
     <string name="action_send">Send</string>
     <string name="unsent_title">unsentTitle</string>
     <string name="unsent_content">unsentContent</string>
+    <string name="action_logout">注销</string>
 </resources>

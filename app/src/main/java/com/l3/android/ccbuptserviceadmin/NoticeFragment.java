@@ -125,7 +125,7 @@ public class NoticeFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.fragment_new_notice, menu);
+        inflater.inflate(R.menu.menu_notice, menu);
     }
 
     @Override
