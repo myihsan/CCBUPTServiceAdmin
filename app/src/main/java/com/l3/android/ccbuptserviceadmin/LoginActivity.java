@@ -59,6 +59,7 @@ public class LoginActivity extends BaseActivity {
         if (teacherId != -1) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
+            finish();
         }
 
         super.onCreate(savedInstanceState);
@@ -259,6 +260,7 @@ public class LoginActivity extends BaseActivity {
             if (success) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
