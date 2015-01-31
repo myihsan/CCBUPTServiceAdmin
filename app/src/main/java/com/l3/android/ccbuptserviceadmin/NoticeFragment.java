@@ -24,13 +24,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -60,7 +57,7 @@ public class NoticeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments()!=null) {
+        if (getArguments() != null) {
             mNoticeId = getArguments().getInt(EXTRA_NOTICE_ID, -1);
         }
         setHasOptionsMenu(true);
@@ -101,6 +98,7 @@ public class NoticeFragment extends Fragment {
             mTitleEditText.setText(notice.getTitle());
             mContentEditText.setText(notice.getContent());
             mIsSent = true;
+            new GetSpecialtyTask().execute();
         }
 
         return view;
@@ -139,7 +137,7 @@ public class NoticeFragment extends Fragment {
                 }
                 return true;
             case R.id.action_send:
-                new sendTask().execute();
+                new SendTask().execute();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -163,6 +161,20 @@ public class NoticeFragment extends Fragment {
                 reader.close();
         }
         return authority;
+    }
+
+    private String getSpecialty() {
+        String result = null;
+        String fetchUrl = "http://10.168.1.124/CCBUPTService/getspecialty.php";
+        String url = Uri.parse(fetchUrl).buildUpon()
+                .appendQueryParameter("noticeId", String.valueOf(mNoticeId))
+                .build().toString();
+        try {
+            result = new NoticeFetcher().getUrl(url);
+        } catch (IOException ioe) {
+            Log.e(TAG, "Failed to fetch URL: ", ioe);
+        }
+        return result;
     }
 
     private boolean sendNotice() {
@@ -198,7 +210,7 @@ public class NoticeFragment extends Fragment {
         boolean flag = false;
         String fetchUrl = "http://10.168.1.124/CCBUPTService/editnotice.php";
         String url = Uri.parse(fetchUrl).buildUpon()
-                .appendQueryParameter("id",String.valueOf(mNoticeId))
+                .appendQueryParameter("id", String.valueOf(mNoticeId))
                 .appendQueryParameter("title", mTitleEditText.getText().toString())
                 .appendQueryParameter("content", mContentEditText.getText().toString())
                 .build().toString();
@@ -208,7 +220,7 @@ public class NoticeFragment extends Fragment {
                 url += "&tagList[]=" + checkBox.getText().toString();
             }
         }
-        Log.d(TAG, "edit: "+url);
+        Log.d(TAG, "edit: " + url);
         try {
             String result = new NoticeFetcher().getUrl(url);
             Log.d(TAG, result);
@@ -231,7 +243,7 @@ public class NoticeFragment extends Fragment {
         }
     }
 
-    private class sendTask extends AsyncTask<Void, Void, Boolean> {
+    private class SendTask extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected Boolean doInBackground(Void... params) {
             if (mNoticeId == -1) {
@@ -244,6 +256,31 @@ public class NoticeFragment extends Fragment {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             showResult(aBoolean);
+        }
+    }
+
+    private class GetSpecialtyTask extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... params) {
+            return getSpecialty();
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                if (result != null && result.length() != 0) {
+                    JSONArray jsonArray = new JSONArray(result);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        for (int j = 0; j < mCheckBoxes.size(); j++) {
+                            if (jsonArray.get(i).toString().equals(mCheckBoxes.get(j).getText())) {
+                                mCheckBoxes.get(j).setChecked(true);
+                            }
+                        }
+                    }
+                }
+            } catch (JSONException jsone) {
+                Log.e(TAG, "Failed to parse specialty", jsone);
+            }
         }
     }
 }

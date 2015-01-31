@@ -53,6 +53,8 @@ public class NoticeListFragment extends Fragment {
                 startActivityForResult(intent, EDIT_NOTICE);
             }
         });
+        NoticeAdapter adapter = new NoticeAdapter(NoticeArray.get(getActivity()).getNotices());
+        mListView.setAdapter(adapter);
         new FetchNoticeTask().execute();
         return view;
     }
@@ -60,13 +62,10 @@ public class NoticeListFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         new FetchNoticeTask().execute();
-        ((NoticeAdapter)mListView.getAdapter()).notifyDataSetChanged();
     }
 
-    public void setupAdapter() {
-        mNotices = NoticeArray.get(getActivity()).getNotices();
-        NoticeAdapter adapter = new NoticeAdapter(mNotices);
-        mListView.setAdapter(adapter);
+    public void updateAdapter() {
+        ((NoticeAdapter)mListView.getAdapter()).notifyDataSetChanged();
     }
 
     private class FetchNoticeTask extends AsyncTask<Void, Void, ArrayList<Notice>> {
@@ -84,7 +83,7 @@ public class NoticeListFragment extends Fragment {
         @Override
         protected void onPostExecute(ArrayList<Notice> notices) {
             NoticeArray.get(getActivity()).refreshNotices(0, notices);
-            setupAdapter();
+            updateAdapter();
         }
     }
 
