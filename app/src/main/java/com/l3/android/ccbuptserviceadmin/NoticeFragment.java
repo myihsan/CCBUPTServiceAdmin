@@ -182,17 +182,22 @@ public class NoticeFragment extends Fragment {
         String fetchUrl = "http://10.168.1.124/CCBUPTService/newnotice.php";
         int teacherId = PreferenceManager.getDefaultSharedPreferences(getActivity())
                 .getInt(getString(R.string.logged_teacher_id), -1);
+        String targets = null;
+        for (CheckBox checkBox : mCheckBoxes) {
+            if (checkBox.isChecked()) {
+                if (targets == null) {
+                    targets = checkBox.getText().toString();
+                } else {
+                    targets += "," + checkBox.getText().toString();
+                }
+            }
+        }
         String url = Uri.parse(fetchUrl).buildUpon()
                 .appendQueryParameter("title", mTitleEditText.getText().toString())
                 .appendQueryParameter("content", mContentEditText.getText().toString())
                 .appendQueryParameter("teacherId", String.valueOf(teacherId))
+                .appendQueryParameter("targets",targets)
                 .build().toString();
-
-        for (CheckBox checkBox : mCheckBoxes) {
-            if (checkBox.isChecked()) {
-                url += "&tagList[]=" + checkBox.getText().toString();
-            }
-        }
         Log.d(TAG, url);
         try {
             String result = new NoticeFetcher().getUrl(url);
@@ -209,17 +214,22 @@ public class NoticeFragment extends Fragment {
     private boolean editNotice() {
         boolean flag = false;
         String fetchUrl = "http://10.168.1.124/CCBUPTService/editnotice.php";
+        String targets = null;
+        for (CheckBox checkBox : mCheckBoxes) {
+            if (checkBox.isChecked()) {
+                if (targets == null) {
+                    targets = checkBox.getText().toString();
+                } else {
+                    targets += "," + checkBox.getText().toString();
+                }
+            }
+        }
         String url = Uri.parse(fetchUrl).buildUpon()
                 .appendQueryParameter("id", String.valueOf(mNoticeId))
                 .appendQueryParameter("title", mTitleEditText.getText().toString())
                 .appendQueryParameter("content", mContentEditText.getText().toString())
+                .appendQueryParameter("targets",targets)
                 .build().toString();
-
-        for (CheckBox checkBox : mCheckBoxes) {
-            if (checkBox.isChecked()) {
-                url += "&tagList[]=" + checkBox.getText().toString();
-            }
-        }
         Log.d(TAG, "edit: " + url);
         try {
             String result = new NoticeFetcher().getUrl(url);
