@@ -39,6 +39,7 @@ public class NoticeFragment extends Fragment {
             "com.l3.android.ccbuptserviceadmin.notice_id";
 
     private EditText mTitleEditText, mContentEditText;
+    private MenuItem mSendAction;
     private ArrayList<CheckBox> mCheckBoxes = new ArrayList<CheckBox>();
 
     private int mNoticeId = -1;
@@ -126,6 +127,7 @@ public class NoticeFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_notice, menu);
+        mSendAction=menu.findItem(R.id.action_send);
     }
 
     @Override
@@ -137,6 +139,7 @@ public class NoticeFragment extends Fragment {
                 }
                 return true;
             case R.id.action_send:
+                mSendAction.setEnabled(false);
                 new SendTask().execute();
                 return true;
             default:
@@ -250,6 +253,7 @@ public class NoticeFragment extends Fragment {
             getActivity().finish();
         } else {
             Toast.makeText(getActivity(), "发送失败，请重试", Toast.LENGTH_LONG).show();
+            mSendAction.setEnabled(true);
         }
     }
 
