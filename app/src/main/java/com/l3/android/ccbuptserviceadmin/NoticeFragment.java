@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,8 +17,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -39,6 +42,7 @@ public class NoticeFragment extends Fragment {
             "com.l3.android.ccbuptserviceadmin.notice_id";
 
     private EditText mTitleEditText, mContentEditText;
+    private TextView mTargetsTextView;
     private MenuItem mSendAction;
     private ArrayList<CheckBox> mCheckBoxes = new ArrayList<CheckBox>();
 
@@ -68,8 +72,9 @@ public class NoticeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notice, container, false);
-        mTitleEditText = (EditText) view.findViewById(R.id.new_notice_titleTextView);
-        mContentEditText = (EditText) view.findViewById(R.id.new_notice_contentTextView);
+        mTitleEditText = (EditText) view.findViewById(R.id.notice_titleTextView);
+        mContentEditText = (EditText) view.findViewById(R.id.notice_contentTextView);
+        mTargetsTextView = (TextView) view.findViewById(R.id.notice_targetsTextView);
         ArrayList<String> authority = new ArrayList<String>();
         try {
             authority = loadAuthority();
@@ -78,9 +83,14 @@ public class NoticeFragment extends Fragment {
         }
         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.new_notice_linearLayout);
         for (int i = 0; i < authority.size(); i++) {
-            //在通过动态填充的方式找到CheckBox的文件
             CheckBox checkbox = (CheckBox) getActivity().getLayoutInflater().inflate(
                     R.layout.checkbox_new_notice, null);
+            checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    mTargetsTextView.setError(null);
+                }
+            });
             mCheckBoxes.add(checkbox);
             mCheckBoxes.get(i).setText(authority.get(i));
             linearLayout.addView(checkbox);
@@ -127,7 +137,7 @@ public class NoticeFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_notice, menu);
-        mSendAction=menu.findItem(R.id.action_send);
+        mSendAction = menu.findItem(R.id.action_send);
     }
 
     @Override
@@ -139,12 +149,47 @@ public class NoticeFragment extends Fragment {
                 }
                 return true;
             case R.id.action_send:
-                mSendAction.setEnabled(false);
-                new SendTask().execute();
+                if (checkNotice()) {
+                    mSendAction.setEnabled(false);
+                    new SendTask().execute();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private boolean checkNotice() {
+        boolean flag = false;
+        View focusView = null;
+        mTitleEditText.setError(null);
+        mContentEditText.setError(null);
+        mTargetsTextView.setError(null);
+
+        String title = mTitleEditText.getText().toString();
+        String content = mContentEditText.getText().toString();
+        for (CheckBox checkBox : mCheckBoxes) {
+            if (checkBox.isChecked()) {
+                flag = true;
+            }
+        }
+        if (!flag) {
+            mTargetsTextView.setError(getString(R.string.error_field_required));
+        }
+        if (TextUtils.isEmpty(content)) {
+            mContentEditText.setError(getString(R.string.error_field_required));
+            focusView = mContentEditText;
+            flag = false;
+        }
+        if (TextUtils.isEmpty(title)) {
+            mTitleEditText.setError(getString(R.string.error_field_required));
+            focusView = mTitleEditText;
+            flag = false;
+        }
+        if (focusView != null) {
+            focusView.requestFocus();
+        }
+        return flag;
     }
 
     private ArrayList<String> loadAuthority() throws IOException, JSONException {
@@ -199,7 +244,7 @@ public class NoticeFragment extends Fragment {
                 .appendQueryParameter("title", mTitleEditText.getText().toString())
                 .appendQueryParameter("content", mContentEditText.getText().toString())
                 .appendQueryParameter("teacherId", String.valueOf(teacherId))
-                .appendQueryParameter("targets",targets)
+                .appendQueryParameter("targets", targets)
                 .build().toString();
         Log.d(TAG, url);
         try {
@@ -231,7 +276,7 @@ public class NoticeFragment extends Fragment {
                 .appendQueryParameter("id", String.valueOf(mNoticeId))
                 .appendQueryParameter("title", mTitleEditText.getText().toString())
                 .appendQueryParameter("content", mContentEditText.getText().toString())
-                .appendQueryParameter("targets",targets)
+                .appendQueryParameter("targets", targets)
                 .build().toString();
         Log.d(TAG, "edit: " + url);
         try {

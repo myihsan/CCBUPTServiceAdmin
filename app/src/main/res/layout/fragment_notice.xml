@@ -10,7 +10,7 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/new_notice_titleTextView"
+        android:id="@+id/notice_titleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -20,7 +20,7 @@
         />
 
     <EditText
-        android:id="@+id/new_notice_contentTextView"
+        android:id="@+id/notice_contentTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/new_notice_content_hint"
@@ -30,6 +30,7 @@
         />
 
     <TextView
+        android:id="@+id/notice_targetsTextView"
         style="?android:listSeparatorTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
