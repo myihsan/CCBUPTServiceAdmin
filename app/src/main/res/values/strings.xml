@@ -8,4 +8,8 @@
     <string name="unsent_title">unsentTitle</string>
     <string name="unsent_content">unsentContent</string>
     <string name="action_logout">注销</string>
+    <string name="queue_total_label">排队人数</string>
+    <string name="queue_now_label">当前</string>
+    <string name="queue_next_one">下一位</string>
+    <string name="queue_detail">排队详情</string>
 </resources>

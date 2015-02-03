@@ -75,14 +75,14 @@ public class NoticeListFragment extends Fragment {
                     .getInt(getString(R.string.logged_admin_id), -1);
             Log.d(TAG, adminId + "");
             if (adminId != -1) {
-                return new NoticeFetcher().fetchNoticeByAdminId(adminId);
+                return new DataFetcher().fetchNoticeByAdminId(adminId);
             }
             return new ArrayList<Notice>();
         }
 
         @Override
         protected void onPostExecute(ArrayList<Notice> notices) {
-            NoticeArray.get(getActivity()).refreshNotices(0, notices);
+            NoticeArray.get(getActivity()).refreshNotices(notices);
             updateAdapter();
         }
     }

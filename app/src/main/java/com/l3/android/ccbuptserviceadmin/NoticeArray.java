@@ -38,8 +38,8 @@ public class NoticeArray {
         return null;
     }
 
-    public void refreshNotices(int position, ArrayList<Notice> notices) {
+    public void refreshNotices(ArrayList<Notice> notices) {
         mNotices.clear();
-        mNotices.addAll(position, notices);
+        mNotices.addAll(notices);
     }
 }

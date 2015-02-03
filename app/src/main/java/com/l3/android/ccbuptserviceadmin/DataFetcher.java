@@ -1,10 +1,12 @@
 package com.l3.android.ccbuptserviceadmin;
 
+import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -16,8 +18,8 @@ import java.util.ArrayList;
 /**
  * Created by Ihsan on 15/1/23.
  */
-public class NoticeFetcher {
-    private static final String TAG = "NoticeFetcher";
+public class DataFetcher {
+    private static final String TAG = "DataFetcher";
 
     private byte[] getUrlBytes(String urlSpec) throws IOException {
         URL url = new URL(urlSpec);
@@ -67,10 +69,43 @@ public class NoticeFetcher {
     }
 
     private void parseNotices(ArrayList<Notice> notices, String jsonString) throws JSONException, IOException {
-        JSONArray itemsArray = new JSONArray(jsonString);
-        for (int i = 0; i < itemsArray.length(); i++) {
-            Notice notice = new Notice(itemsArray.getJSONObject(i));
+        JSONArray itemArray = new JSONArray(jsonString);
+        for (int i = 0; i < itemArray.length(); i++) {
+            Notice notice = new Notice(itemArray.getJSONObject(i));
             notices.add(notice);
         }
+    }
+
+    public boolean fetchQueueByAdminId(Context context,int adminId) {
+        String fetchUrl = "http://10.168.1.124/CCBUPTService/queue.php";
+        String url = Uri.parse(fetchUrl).buildUpon()
+                .appendQueryParameter("adminId", String.valueOf(adminId))
+                .build().toString();
+        try {
+            String jsonString = getUrl(url);
+            Log.i(TAG, jsonString);
+            parseQueue(context,jsonString);
+            return true;
+        } catch (IOException ioe) {
+            Log.e(TAG, "Failed to fetch URL: ", ioe);
+            return false;
+        } catch (JSONException jsone) {
+            Log.e(TAG, "Failed to parse queue", jsone);
+            return false;
+        }
+    }
+
+    private void parseQueue(Context context,String jsonString) throws JSONException{
+        JSONObject queueObject=new JSONObject(jsonString);
+        String title=queueObject.getString("title");
+        int nextNumber=queueObject.getInt("nextNumber");
+        int total=queueObject.getInt("total");
+        ArrayList<Queuer> queuers=new ArrayList<Queuer>();
+        JSONArray queuerArray = queueObject.getJSONArray("queuer");
+        for (int i = 0; i < queuerArray.length(); i++){
+            Queuer queuer=new Queuer(queuerArray.getJSONObject(i));
+            queuers.add(queuer);
+        }
+        Queue.get(context).refreshQueuer(title,nextNumber,total,queuers);
     }
 }
