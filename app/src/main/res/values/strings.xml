@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">CCBUPTServiceAdmin</string>
-    <string name="logged_teacher_id">loggedTeacherId</string>
+    <string name="logged_admin_id">loggedAdminId</string>
     <string name="new_notice_title_hint">标题</string>
     <string name="new_notice_content_hint">内容</string>
     <string name="new_notice_target_label">目标</string>

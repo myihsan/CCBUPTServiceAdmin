@@ -47,12 +47,12 @@ public class NoticeFetcher {
         return new String(getUrlBytes(urlSpec));
     }
 
-    public ArrayList<Notice> fetchNoticeByTeacherId(int teacherId) {
+    public ArrayList<Notice> fetchNoticeByAdminId(int adminId) {
         ArrayList<Notice> notices = new ArrayList<Notice>();
 
         String fetchUrl = "http://10.168.1.124/CCBUPTService/notice.php";
         String url = Uri.parse(fetchUrl).buildUpon()
-                .appendQueryParameter("teacher_id", String.valueOf(teacherId))
+                .appendQueryParameter("adminId", String.valueOf(adminId))
                 .build().toString();
         try {
             String jsonString = getUrl(url);

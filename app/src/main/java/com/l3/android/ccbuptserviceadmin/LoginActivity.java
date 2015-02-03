@@ -26,14 +26,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -53,10 +49,10 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        int teacherId = PreferenceManager.getDefaultSharedPreferences(this)
-                .getInt(getString(R.string.logged_teacher_id), -1);
-        Log.d(TAG, teacherId + "");
-        if (teacherId != -1) {
+        int adminId = PreferenceManager.getDefaultSharedPreferences(this)
+                .getInt(getString(R.string.logged_admin_id), -1);
+        Log.d(TAG, adminId + "");
+        if (adminId != -1) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
@@ -233,14 +229,14 @@ public class LoginActivity extends BaseActivity {
             ArrayList<String> authority = new ArrayList<String>();
             try {
                 JSONObject jsonObject = new JSONObject(jsonString);
-                int teacherId = jsonObject.getInt("teacher_id");
-                if (teacherId != -1) {
+                int adminId = jsonObject.getInt("admin_id");
+                if (adminId != -1) {
                     success = true;
                     PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
                             .edit()
-                            .putInt(getString(R.string.logged_teacher_id), teacherId)
+                            .putInt(getString(R.string.logged_admin_id), adminId)
                             .commit();
-                    Log.d(TAG, "teacher_id: " + teacherId);
+                    Log.d(TAG, "admin_id: " + adminId);
                     JSONArray authorityJsonArray = jsonObject.getJSONArray("authority");
                     for (int i = 0; i < authorityJsonArray.length(); i++) {
                         authority.add(authorityJsonArray.getString(i));

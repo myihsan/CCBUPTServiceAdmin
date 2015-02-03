@@ -71,11 +71,11 @@ public class NoticeListFragment extends Fragment {
     private class FetchNoticeTask extends AsyncTask<Void, Void, ArrayList<Notice>> {
         @Override
         protected ArrayList<Notice> doInBackground(Void... params) {
-            int teacherId = PreferenceManager.getDefaultSharedPreferences(getActivity())
-                    .getInt(getString(R.string.logged_teacher_id), -1);
-            Log.d(TAG, teacherId + "");
-            if (teacherId != -1) {
-                return new NoticeFetcher().fetchNoticeByTeacherId(teacherId);
+            int adminId = PreferenceManager.getDefaultSharedPreferences(getActivity())
+                    .getInt(getString(R.string.logged_admin_id), -1);
+            Log.d(TAG, adminId + "");
+            if (adminId != -1) {
+                return new NoticeFetcher().fetchNoticeByAdminId(adminId);
             }
             return new ArrayList<Notice>();
         }

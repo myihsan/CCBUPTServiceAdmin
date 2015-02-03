@@ -81,7 +81,7 @@ public class MainActivity extends BaseActivity implements MaterialTabListener {
             case R.id.action_logout:
                 PreferenceManager.getDefaultSharedPreferences(this)
                         .edit()
-                        .remove(getString(R.string.logged_teacher_id))
+                        .remove(getString(R.string.logged_admin_id))
                         .commit();
                 Intent intent=new Intent(this,LoginActivity.class);
                 startActivity(intent);

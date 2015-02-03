@@ -228,8 +228,8 @@ public class NoticeFragment extends Fragment {
     private boolean sendNotice() {
         boolean flag = false;
         String fetchUrl = "http://10.168.1.124/CCBUPTService/newnotice.php";
-        int teacherId = PreferenceManager.getDefaultSharedPreferences(getActivity())
-                .getInt(getString(R.string.logged_teacher_id), -1);
+        int adminId = PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .getInt(getString(R.string.logged_admin_id), -1);
         String targets = null;
         for (CheckBox checkBox : mCheckBoxes) {
             if (checkBox.isChecked()) {
@@ -243,7 +243,7 @@ public class NoticeFragment extends Fragment {
         String url = Uri.parse(fetchUrl).buildUpon()
                 .appendQueryParameter("title", mTitleEditText.getText().toString())
                 .appendQueryParameter("content", mContentEditText.getText().toString())
-                .appendQueryParameter("teacherId", String.valueOf(teacherId))
+                .appendQueryParameter("adminId", String.valueOf(adminId))
                 .appendQueryParameter("targets", targets)
                 .build().toString();
         Log.d(TAG, url);
