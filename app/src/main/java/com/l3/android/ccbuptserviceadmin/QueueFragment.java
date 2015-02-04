@@ -1,6 +1,7 @@
 package com.l3.android.ccbuptserviceadmin;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -13,12 +14,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.IOException;
 
 /**
  * Created by Ihsan on 15/2/3.
  */
 public class QueueFragment extends Fragment {
-    private static final String TAG="QueueFragment";
+    private static final String TAG = "QueueFragment";
 
     private LinearLayout mQueueLinearLayout;
     private TextView mNextNumberTextView, mTotalTextView;
@@ -35,12 +39,18 @@ public class QueueFragment extends Fragment {
         mTotalTextView = (TextView) view.findViewById(R.id.queue_total_textView);
 
         mNextOneButtone = (Button) view.findViewById(R.id.queue_next_one);
+        mNextOneButtone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new NextQueuerTask().execute();
+            }
+        });
 
         mQueueDetailButton = (Button) view.findViewById(R.id.queue_detail);
         mQueueDetailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),QueueDetailActivity.class);
+                Intent intent = new Intent(getActivity(), QueueDetailActivity.class);
                 startActivity(intent);
             }
         });
@@ -69,9 +79,44 @@ public class QueueFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
-            if (aBoolean){
+            if (aBoolean) {
                 updateView();
                 mQueueLinearLayout.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    private class NextQueuerTask extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            boolean flag=false;
+            int adminId = PreferenceManager.getDefaultSharedPreferences(getActivity())
+                    .getInt(getString(R.string.logged_admin_id), -1);
+            if (adminId == -1) {
+                return false;
+            }
+            String fetchUrl = "http://10.168.1.124/CCBUPTService/nextqueuer.php";
+            String url = Uri.parse(fetchUrl).buildUpon()
+                    .appendQueryParameter("adminId", String.valueOf(adminId))
+                    .build().toString();
+            try {
+                String result = new DataFetcher().getUrl(url);
+                Log.d(TAG, result);
+                if (result.equals("succeed")) {
+                    flag = true;
+                }
+            } catch (IOException ioe) {
+                Log.e(TAG, "Failed to fetch URL: ", ioe);
+            }
+            return flag;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            if (aBoolean){
+                new FetchQueueTask().execute();
+            }else {
+                Toast.makeText(getActivity(),"处理失败，请重试",Toast.LENGTH_LONG).show();
             }
         }
     }
