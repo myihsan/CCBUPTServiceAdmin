@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minHeight="75dp"
+                android:orientation="vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+
+    <TextView
+        android:id="@+id/queuer_list_item_numberTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/body_text_1"
+        android:textSize="16sp"
+        tools:text="1"
+        />
+
+    <TextView
+        android:id="@+id/queuer_list_item_requireTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/queuer_list_item_numberTextView"
+        android:textColor="@color/body_text_1"
+        android:textSize="16sp"
+        tools:text="要求"
+        android:layout_marginLeft="8dp"/>
+
+    <TextView
+        android:id="@+id/queuer_list_item_tokenTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/queuer_list_item_numberTextView"
+        android:textColor="@color/caption_text"
+        android:textSize="12sp"
+        tools:text="sdfsadfjsladfjsljflskf"/>
+
+</RelativeLayout>

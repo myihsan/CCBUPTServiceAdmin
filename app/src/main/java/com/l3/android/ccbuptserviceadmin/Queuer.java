@@ -11,9 +11,10 @@ public class Queuer {
     private String mToken;
     private String mRequire;
 
-    public Queuer(JSONObject jsonNotice) throws JSONException {
-        mToken = jsonNotice.getString("token");
-        mRequire = jsonNotice.getString("require");
+    public Queuer(JSONObject jsonQueuer) throws JSONException {
+        mNumber = Integer.valueOf(jsonQueuer.getString("number"));
+        mToken = jsonQueuer.getString("token");
+        mRequire = jsonQueuer.getString("require");
     }
 
     public int getNumber() {

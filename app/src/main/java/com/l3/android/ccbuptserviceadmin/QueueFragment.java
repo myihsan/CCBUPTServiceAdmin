@@ -1,5 +1,6 @@
 package com.l3.android.ccbuptserviceadmin;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -34,7 +35,15 @@ public class QueueFragment extends Fragment {
         mTotalTextView = (TextView) view.findViewById(R.id.queue_total_textView);
 
         mNextOneButtone = (Button) view.findViewById(R.id.queue_next_one);
+
         mQueueDetailButton = (Button) view.findViewById(R.id.queue_detail);
+        mQueueDetailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),QueueDetailActivity.class);
+                startActivity(intent);
+            }
+        });
 
         new FetchQueueTask().execute();
 

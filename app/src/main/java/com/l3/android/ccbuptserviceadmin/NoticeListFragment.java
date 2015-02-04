@@ -87,7 +87,7 @@ public class NoticeListFragment extends Fragment {
         }
     }
 
-    public class NoticeAdapter extends ArrayAdapter<Notice> {
+    private class NoticeAdapter extends ArrayAdapter<Notice> {
 
         public NoticeAdapter(ArrayList<Notice> notices) {
             super(getActivity(), 0, notices);
