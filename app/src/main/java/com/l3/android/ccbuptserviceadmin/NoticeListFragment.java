@@ -41,7 +41,7 @@ public class NoticeListFragment extends Fragment {
                 Notice notice = ((NoticeAdapter) mListView.getAdapter()).getItem(position);
                 Intent intent = new Intent(getActivity(), NoticeActivity.class);
                 intent.putExtra(NoticeFragment.EXTRA_NOTICE_ID, notice.getId());
-                startActivityForResult(intent, NEW_NOTICE);
+                startActivityForResult(intent, EDIT_NOTICE);
             }
         });
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.notice_list_fab);
@@ -50,7 +50,7 @@ public class NoticeListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), NoticeActivity.class);
-                startActivityForResult(intent, EDIT_NOTICE);
+                startActivityForResult(intent, NEW_NOTICE);
             }
         });
         NoticeAdapter adapter = new NoticeAdapter(NoticeArray.get(getActivity()).getNotices());

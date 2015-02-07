@@ -274,7 +274,7 @@ public class LoginActivity extends BaseActivity {
             Writer writer = null;
             try {
                 OutputStream out = LoginActivity.this
-                        .openFileOutput("authority.json", Context.MODE_PRIVATE);
+                        .openFileOutput(getString(R.string.saved_authority_file_name), Context.MODE_PRIVATE);
                 writer = new OutputStreamWriter(out);
                 writer.write(authorityJsonString);
             } finally {

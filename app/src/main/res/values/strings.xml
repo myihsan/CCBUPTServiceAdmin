@@ -12,4 +12,5 @@
     <string name="queue_now_label">当前</string>
     <string name="queue_next_one">下一位</string>
     <string name="queue_detail">排队详情</string>
+    <string name="saved_authority_file_name">authority.json</string>
 </resources>

@@ -7,12 +7,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.File;
 import java.util.Locale;
 
 import it.neokree.materialtabs.MaterialTab;
@@ -77,14 +79,15 @@ public class MainActivity extends BaseActivity implements MaterialTabListener {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_logout:
                 PreferenceManager.getDefaultSharedPreferences(this)
                         .edit()
                         .remove(getString(R.string.logged_admin_id))
                         .commit();
-                Intent intent=new Intent(this,LoginActivity.class);
+                Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
+                deleteFile(getString(R.string.saved_authority_file_name));
                 finish();
                 return true;
             default:
