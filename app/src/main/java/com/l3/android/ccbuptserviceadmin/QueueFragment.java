@@ -72,7 +72,7 @@ public class QueueFragment extends Fragment {
             int adminId = PreferenceManager.getDefaultSharedPreferences(getActivity())
                     .getInt(getString(R.string.logged_admin_id), -1);
             if (adminId != -1) {
-                return new DataFetcher().fetchQueueByAdminId(getActivity(), adminId);
+                return new DataFetcher(getActivity()).fetchQueueByAdminId(getActivity(), adminId);
             }
             return false;
         }
@@ -100,7 +100,7 @@ public class QueueFragment extends Fragment {
                     .appendQueryParameter("adminId", String.valueOf(adminId))
                     .build().toString();
             try {
-                String result = new DataFetcher().getUrl(url);
+                String result = new DataFetcher(getActivity()).getUrl(url);
                 Log.d(TAG, result);
                 if (result.equals("succeed")) {
                     flag = true;

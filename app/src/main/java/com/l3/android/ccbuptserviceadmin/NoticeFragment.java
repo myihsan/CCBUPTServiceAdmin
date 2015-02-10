@@ -218,7 +218,7 @@ public class NoticeFragment extends Fragment {
                 .appendQueryParameter("noticeId", String.valueOf(mNoticeId))
                 .build().toString();
         try {
-            result = new DataFetcher().getUrl(url);
+            result = new DataFetcher(getActivity()).getUrl(url);
         } catch (IOException ioe) {
             Log.e(TAG, "Failed to fetch URL: ", ioe);
         }
@@ -248,7 +248,7 @@ public class NoticeFragment extends Fragment {
                 .build().toString();
         Log.d(TAG, url);
         try {
-            String result = new DataFetcher().getUrl(url);
+            String result = new DataFetcher(getActivity()).getUrl(url);
             Log.d(TAG, result);
             if (result.equals("succeed")) {
                 flag = true;
@@ -280,7 +280,7 @@ public class NoticeFragment extends Fragment {
                 .build().toString();
         Log.d(TAG, "edit: " + url);
         try {
-            String result = new DataFetcher().getUrl(url);
+            String result = new DataFetcher(getActivity()).getUrl(url);
             Log.d(TAG, result);
             if (result.equals("succeed")) {
                 flag = true;

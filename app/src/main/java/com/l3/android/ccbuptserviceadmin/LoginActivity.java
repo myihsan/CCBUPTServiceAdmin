@@ -210,7 +210,7 @@ public class LoginActivity extends BaseActivity {
 
             String jsonString;
             try {
-                jsonString = new DataFetcher().getUrl(url);
+                jsonString = new DataFetcher(LoginActivity.this).getUrl(url);
 
             } catch (IOException ioe) {
                 Log.e(TAG, "Failed to fetch URL: ", ioe);

@@ -20,6 +20,11 @@ import java.util.ArrayList;
  */
 public class DataFetcher {
     private static final String TAG = "DataFetcher";
+    private Context mContext;
+
+    public DataFetcher(Context context) {
+        mContext = context;
+    }
 
     private byte[] getUrlBytes(String urlSpec) throws IOException {
         URL url = new URL(urlSpec);
@@ -52,7 +57,7 @@ public class DataFetcher {
     public ArrayList<Notice> fetchNoticeByAdminId(int adminId) {
         ArrayList<Notice> notices = new ArrayList<Notice>();
 
-        String fetchUrl = "http://10.168.1.124/CCBUPTService/notice.php";
+        String fetchUrl = mContext.getString(R.string.root_url)+"notice.php";
         String url = Uri.parse(fetchUrl).buildUpon()
                 .appendQueryParameter("adminId", String.valueOf(adminId))
                 .build().toString();
@@ -76,15 +81,15 @@ public class DataFetcher {
         }
     }
 
-    public boolean fetchQueueByAdminId(Context context,int adminId) {
-        String fetchUrl = "http://10.168.1.124/CCBUPTService/queue.php";
+    public boolean fetchQueueByAdminId(Context context, int adminId) {
+        String fetchUrl = mContext.getString(R.string.root_url)+"queue.php";
         String url = Uri.parse(fetchUrl).buildUpon()
                 .appendQueryParameter("adminId", String.valueOf(adminId))
                 .build().toString();
         try {
             String jsonString = getUrl(url);
             Log.i(TAG, jsonString);
-            parseQueue(context,jsonString);
+            parseQueue(context, jsonString);
             return true;
         } catch (IOException ioe) {
             Log.e(TAG, "Failed to fetch URL: ", ioe);
@@ -95,17 +100,17 @@ public class DataFetcher {
         }
     }
 
-    private void parseQueue(Context context,String jsonString) throws JSONException{
-        JSONObject queueObject=new JSONObject(jsonString);
-        String title=queueObject.getString("title");
-        int nextNumber=queueObject.getInt("nextNumber");
-        int total=queueObject.getInt("total");
-        ArrayList<Queuer> queuers=new ArrayList<Queuer>();
+    private void parseQueue(Context context, String jsonString) throws JSONException {
+        JSONObject queueObject = new JSONObject(jsonString);
+        String title = queueObject.getString("title");
+        int nextNumber = queueObject.getInt("nextNumber");
+        int total = queueObject.getInt("total");
+        ArrayList<Queuer> queuers = new ArrayList<Queuer>();
         JSONArray queuerArray = queueObject.getJSONArray("queuer");
-        for (int i = 0; i < queuerArray.length(); i++){
-            Queuer queuer=new Queuer(queuerArray.getJSONObject(i));
+        for (int i = 0; i < queuerArray.length(); i++) {
+            Queuer queuer = new Queuer(queuerArray.getJSONObject(i));
             queuers.add(queuer);
         }
-        Queue.get(context).refreshQueuer(title,nextNumber,total,queuers);
+        Queue.get(context).refreshQueuer(title, nextNumber, total, queuers);
     }
 }
