@@ -95,7 +95,7 @@ public class QueueFragment extends Fragment {
             if (adminId == -1) {
                 return false;
             }
-            String fetchUrl = "http://10.168.1.124/CCBUPTService/nextqueuer.php";
+            String fetchUrl = getString(R.string.root_url)+"nextqueuer.php";
             String url = Uri.parse(fetchUrl).buildUpon()
                     .appendQueryParameter("adminId", String.valueOf(adminId))
                     .build().toString();

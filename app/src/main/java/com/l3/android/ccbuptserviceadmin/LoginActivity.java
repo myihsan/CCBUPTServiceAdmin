@@ -201,7 +201,7 @@ public class LoginActivity extends BaseActivity {
         @Override
         protected String doInBackground(Void... params) {
 
-            String loginUrl = "http://10.168.1.124/CCBUPTService/login.php";
+            String loginUrl = getString(R.string.root_url)+"login.php";
             String url = Uri.parse(loginUrl).buildUpon()
                     .appendQueryParameter("username", mUsername)
                     .appendQueryParameter("password", mPassword)

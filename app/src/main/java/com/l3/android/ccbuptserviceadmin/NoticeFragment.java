@@ -213,7 +213,7 @@ public class NoticeFragment extends Fragment {
 
     private String getSpecialty() {
         String result = null;
-        String fetchUrl = "http://10.168.1.124/CCBUPTService/getspecialty.php";
+        String fetchUrl = getString(R.string.root_url)+"/getspecialty.php";
         String url = Uri.parse(fetchUrl).buildUpon()
                 .appendQueryParameter("noticeId", String.valueOf(mNoticeId))
                 .build().toString();
@@ -227,7 +227,7 @@ public class NoticeFragment extends Fragment {
 
     private boolean sendNotice() {
         boolean flag = false;
-        String fetchUrl = "http://10.168.1.124/CCBUPTService/newnotice.php";
+        String fetchUrl = getString(R.string.root_url)+"newnotice.php";
         int adminId = PreferenceManager.getDefaultSharedPreferences(getActivity())
                 .getInt(getString(R.string.logged_admin_id), -1);
         String targets = null;
@@ -261,7 +261,7 @@ public class NoticeFragment extends Fragment {
 
     private boolean editNotice() {
         boolean flag = false;
-        String fetchUrl = "http://10.168.1.124/CCBUPTService/editnotice.php";
+        String fetchUrl = getString(R.string.root_url)+"editnotice.php";
         String targets = null;
         for (CheckBox checkBox : mCheckBoxes) {
             if (checkBox.isChecked()) {
