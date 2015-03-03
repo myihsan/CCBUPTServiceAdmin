@@ -281,7 +281,7 @@ public class NoticeFragment extends Fragment {
     private class GetSpecialtyTask extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... params) {
-            return getSpecialty();
+            return new DataFetcher(getActivity()).fetchNoticeSpecialty(mNoticeId);
         }
 
         @Override

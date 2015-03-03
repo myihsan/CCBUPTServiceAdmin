@@ -198,4 +198,18 @@ public class DataFetcher {
         }
         return flag;
     }
+
+    public String fetchNoticeSpecialty(int noticeId) {
+        String result = null;
+        String fetchUrl = mContext.getString(R.string.root_url) + "/getspecialty.php";
+        String url = Uri.parse(fetchUrl).buildUpon()
+                .appendQueryParameter("noticeId", String.valueOf(noticeId))
+                .build().toString();
+        try {
+            result = getUrl(url);
+        } catch (IOException ioe) {
+            Log.e(TAG, "Failed to fetch URL: ", ioe);
+        }
+        return result;
+    }
 }
