@@ -89,34 +89,38 @@ public class QueueFragment extends Fragment {
     private class NextQueuerTask extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected Boolean doInBackground(Void... params) {
-            boolean flag=false;
+//            boolean flag=false;
+//            int adminId = PreferenceManager.getDefaultSharedPreferences(getActivity())
+//                    .getInt(getString(R.string.logged_admin_id), -1);
+//            if (adminId == -1) {
+//                return false;
+//            }
+//            String fetchUrl = getString(R.string.root_url)+"nextqueuer.php";
+//            String url = Uri.parse(fetchUrl).buildUpon()
+//                    .appendQueryParameter("adminId", String.valueOf(adminId))
+//                    .build().toString();
+//            try {
+//                String result = new DataFetcher(getActivity()).getUrl(url);
+//                Log.d(TAG, result);
+//                if (result.equals("succeed")) {
+//                    flag = true;
+//                }
+//            } catch (IOException ioe) {
+//                Log.e(TAG, "Failed to fetch URL: ", ioe);
+//            }
+//            return flag;
+
             int adminId = PreferenceManager.getDefaultSharedPreferences(getActivity())
                     .getInt(getString(R.string.logged_admin_id), -1);
-            if (adminId == -1) {
-                return false;
-            }
-            String fetchUrl = getString(R.string.root_url)+"nextqueuer.php";
-            String url = Uri.parse(fetchUrl).buildUpon()
-                    .appendQueryParameter("adminId", String.valueOf(adminId))
-                    .build().toString();
-            try {
-                String result = new DataFetcher(getActivity()).getUrl(url);
-                Log.d(TAG, result);
-                if (result.equals("succeed")) {
-                    flag = true;
-                }
-            } catch (IOException ioe) {
-                Log.e(TAG, "Failed to fetch URL: ", ioe);
-            }
-            return flag;
+            return new DataFetcher(getActivity()).fetchNextQueuerResult(adminId);
         }
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
-            if (aBoolean){
+            if (aBoolean) {
                 new FetchQueueTask().execute();
-            }else {
-                Toast.makeText(getActivity(),"处理失败，请重试",Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getActivity(), "处理失败，请重试", Toast.LENGTH_LONG).show();
             }
         }
     }

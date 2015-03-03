@@ -57,7 +57,7 @@ public class DataFetcher {
     public ArrayList<Notice> fetchNoticeByAdminId(int adminId) {
         ArrayList<Notice> notices = new ArrayList<Notice>();
 
-        String fetchUrl = mContext.getString(R.string.root_url)+"notice.php";
+        String fetchUrl = mContext.getString(R.string.root_url) + "notice.php";
         String url = Uri.parse(fetchUrl).buildUpon()
                 .appendQueryParameter("adminId", String.valueOf(adminId))
                 .build().toString();
@@ -82,7 +82,7 @@ public class DataFetcher {
     }
 
     public boolean fetchQueueByAdminId(Context context, int adminId) {
-        String fetchUrl = mContext.getString(R.string.root_url)+"queue.php";
+        String fetchUrl = mContext.getString(R.string.root_url) + "queue.php";
         String url = Uri.parse(fetchUrl).buildUpon()
                 .appendQueryParameter("adminId", String.valueOf(adminId))
                 .build().toString();
@@ -112,5 +112,90 @@ public class DataFetcher {
             queuers.add(queuer);
         }
         Queue.get(context).refreshQueuer(title, nextNumber, total, queuers);
+    }
+
+    public String fetchLoginResult(String username, String password) {
+        String loginUrl = mContext.getString(R.string.root_url) + "login.php";
+        String url = Uri.parse(loginUrl).buildUpon()
+                .appendQueryParameter("username", username)
+                .appendQueryParameter("password", password)
+                .build().toString();
+        Log.d(TAG, url);
+
+        String jsonString;
+        try {
+            jsonString = getUrl(url);
+
+        } catch (IOException ioe) {
+            Log.e(TAG, "Failed to fetch URL: ", ioe);
+            return null;
+        }
+        Log.d(TAG, jsonString);
+        return jsonString;
+    }
+
+    public boolean fetchSendNoticeResult(int adminId, String title, String content, String targets) {
+        boolean flag = false;
+        String fetchUrl = mContext.getString(R.string.root_url) + "newnotice.php";
+        String url = Uri.parse(fetchUrl).buildUpon()
+                .appendQueryParameter("title", title)
+                .appendQueryParameter("content", content)
+                .appendQueryParameter("adminId", String.valueOf(adminId))
+                .appendQueryParameter("targets", targets)
+                .build().toString();
+        Log.d(TAG, url);
+        try {
+            String result = getUrl(url);
+            Log.d(TAG, result);
+            if (result.equals("succeed")) {
+                flag = true;
+            }
+        } catch (IOException ioe) {
+            Log.e(TAG, "Failed to fetch URL: ", ioe);
+        }
+        return flag;
+    }
+
+    public boolean fetchEditNoticeResult(int noticeId, String title, String content, String targets) {
+        boolean flag = false;
+        String fetchUrl = mContext.getString(R.string.root_url) + "editnotice.php";
+        String url = Uri.parse(fetchUrl).buildUpon()
+                .appendQueryParameter("id", String.valueOf(noticeId))
+                .appendQueryParameter("title", title)
+                .appendQueryParameter("content", content)
+                .appendQueryParameter("targets", targets)
+                .build().toString();
+        Log.d(TAG, "edit: " + url);
+        try {
+            String result = getUrl(url);
+            Log.d(TAG, result);
+            if (result.equals("succeed")) {
+                flag = true;
+            }
+        } catch (IOException ioe) {
+            Log.e(TAG, "Failed to fetch URL: ", ioe);
+        }
+        return flag;
+    }
+
+    public boolean fetchNextQueuerResult(int adminId) {
+        boolean flag = false;
+        if (adminId == -1) {
+            return false;
+        }
+        String fetchUrl = mContext.getString(R.string.root_url) + "nextqueuer.php";
+        String url = Uri.parse(fetchUrl).buildUpon()
+                .appendQueryParameter("adminId", String.valueOf(adminId))
+                .build().toString();
+        try {
+            String result = getUrl(url);
+            Log.d(TAG, result);
+            if (result.equals("succeed")) {
+                flag = true;
+            }
+        } catch (IOException ioe) {
+            Log.e(TAG, "Failed to fetch URL: ", ioe);
+        }
+        return flag;
     }
 }

@@ -213,7 +213,7 @@ public class NoticeFragment extends Fragment {
 
     private String getSpecialty() {
         String result = null;
-        String fetchUrl = getString(R.string.root_url)+"/getspecialty.php";
+        String fetchUrl = getString(R.string.root_url) + "/getspecialty.php";
         String url = Uri.parse(fetchUrl).buildUpon()
                 .appendQueryParameter("noticeId", String.valueOf(mNoticeId))
                 .build().toString();
@@ -225,96 +225,56 @@ public class NoticeFragment extends Fragment {
         return result;
     }
 
-    private boolean sendNotice() {
-        boolean flag = false;
-        String fetchUrl = getString(R.string.root_url)+"newnotice.php";
-        int adminId = PreferenceManager.getDefaultSharedPreferences(getActivity())
-                .getInt(getString(R.string.logged_admin_id), -1);
-        String targets = null;
-        for (CheckBox checkBox : mCheckBoxes) {
-            if (checkBox.isChecked()) {
-                if (targets == null) {
-                    targets = checkBox.getText().toString();
-                } else {
-                    targets += "," + checkBox.getText().toString();
-                }
-            }
-        }
-        String url = Uri.parse(fetchUrl).buildUpon()
-                .appendQueryParameter("title", mTitleEditText.getText().toString())
-                .appendQueryParameter("content", mContentEditText.getText().toString())
-                .appendQueryParameter("adminId", String.valueOf(adminId))
-                .appendQueryParameter("targets", targets)
-                .build().toString();
-        Log.d(TAG, url);
-        try {
-            String result = new DataFetcher(getActivity()).getUrl(url);
-            Log.d(TAG, result);
-            if (result.equals("succeed")) {
-                flag = true;
-            }
-        } catch (IOException ioe) {
-            Log.e(TAG, "Failed to fetch URL: ", ioe);
-        }
-        return flag;
-    }
-
-    private boolean editNotice() {
-        boolean flag = false;
-        String fetchUrl = getString(R.string.root_url)+"editnotice.php";
-        String targets = null;
-        for (CheckBox checkBox : mCheckBoxes) {
-            if (checkBox.isChecked()) {
-                if (targets == null) {
-                    targets = checkBox.getText().toString();
-                } else {
-                    targets += "," + checkBox.getText().toString();
-                }
-            }
-        }
-        String url = Uri.parse(fetchUrl).buildUpon()
-                .appendQueryParameter("id", String.valueOf(mNoticeId))
-                .appendQueryParameter("title", mTitleEditText.getText().toString())
-                .appendQueryParameter("content", mContentEditText.getText().toString())
-                .appendQueryParameter("targets", targets)
-                .build().toString();
-        Log.d(TAG, "edit: " + url);
-        try {
-            String result = new DataFetcher(getActivity()).getUrl(url);
-            Log.d(TAG, result);
-            if (result.equals("succeed")) {
-                flag = true;
-            }
-        } catch (IOException ioe) {
-            Log.e(TAG, "Failed to fetch URL: ", ioe);
-        }
-        return flag;
-    }
-
-    private void showResult(boolean result) {
-        if (result) {
-            mIsSent = true;
-            Toast.makeText(getActivity(), "发送成功", Toast.LENGTH_LONG).show();
-            getActivity().finish();
-        } else {
-            Toast.makeText(getActivity(), "发送失败，请重试", Toast.LENGTH_LONG).show();
-            mSendAction.setEnabled(true);
-        }
-    }
-
     private class SendTask extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected Boolean doInBackground(Void... params) {
             if (mNoticeId == -1) {
-                return sendNotice();
+                int adminId = PreferenceManager.getDefaultSharedPreferences(getActivity())
+                        .getInt(getString(R.string.logged_admin_id), -1);
+                String targets = null;
+                for (CheckBox checkBox : mCheckBoxes) {
+                    if (checkBox.isChecked()) {
+                        if (targets == null) {
+                            targets = checkBox.getText().toString();
+                        } else {
+                            targets += "," + checkBox.getText().toString();
+                        }
+                    }
+                }
+                return new DataFetcher(getActivity()).fetchSendNoticeResult(
+                        adminId,
+                        mTitleEditText.getText().toString(),
+                        mContentEditText.getText().toString(),
+                        targets);
             } else {
-                return editNotice();
+                String targets = null;
+                for (CheckBox checkBox : mCheckBoxes) {
+                    if (checkBox.isChecked()) {
+                        if (targets == null) {
+                            targets = checkBox.getText().toString();
+                        } else {
+                            targets += "," + checkBox.getText().toString();
+                        }
+                    }
+                }
+                return new DataFetcher(getActivity()).fetchEditNoticeResult(
+                        mNoticeId,
+                        mTitleEditText.getText().toString(),
+                        mContentEditText.getText().toString(),
+                        targets);
             }
         }
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
-            showResult(aBoolean);
+            if (aBoolean) {
+                mIsSent = true;
+                Toast.makeText(getActivity(), "发送成功", Toast.LENGTH_LONG).show();
+                getActivity().finish();
+            } else {
+                Toast.makeText(getActivity(), "发送失败，请重试", Toast.LENGTH_LONG).show();
+                mSendAction.setEnabled(true);
+            }
         }
     }
 

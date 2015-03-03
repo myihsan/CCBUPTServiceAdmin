@@ -21,6 +21,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -200,30 +201,18 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-
-            String loginUrl = getString(R.string.root_url)+"login.php";
-            String url = Uri.parse(loginUrl).buildUpon()
-                    .appendQueryParameter("username", mUsername)
-                    .appendQueryParameter("password", mPassword)
-                    .build().toString();
-            Log.d(TAG, url);
-
-            String jsonString;
-            try {
-                jsonString = new DataFetcher(LoginActivity.this).getUrl(url);
-
-            } catch (IOException ioe) {
-                Log.e(TAG, "Failed to fetch URL: ", ioe);
-                return null;
-            }
-            Log.d(TAG, jsonString);
-            return jsonString;
+            return new DataFetcher(LoginActivity.this).fetchLoginResult(mUsername, mPassword);
         }
 
         @Override
         protected void onPostExecute(final String jsonString) {
             mAuthTask = null;
             showProgress(false);
+
+            if (jsonString == null) {
+                Toast.makeText(LoginActivity.this, "网络连接失败，无法登录", Toast.LENGTH_LONG).show();
+                return;
+            }
 
             boolean success = false;
             ArrayList<String> authority = new ArrayList<String>();
@@ -244,7 +233,7 @@ public class LoginActivity extends BaseActivity {
                     }
                     try {
                         saveAuthority(authorityJsonArray.toString());
-                    }  catch (Exception e) {
+                    } catch (Exception e) {
                         Log.e(TAG, "Error saving authority", e);
                     }
                 }
@@ -269,7 +258,7 @@ public class LoginActivity extends BaseActivity {
             showProgress(false);
         }
 
-        private void saveAuthority(String authorityJsonString) throws IOException{
+        private void saveAuthority(String authorityJsonString) throws IOException {
 
             Writer writer = null;
             try {
