@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-    package="com.l3.android.ccbuptserviceadmin"
+    package="org.l3.android.ccbuptserviceadmin"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
 
@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LoginActivity"
+            android:name="org.l3.android.ccbuptserviceadmin.LoginActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize|stateVisible">
             <intent-filter>
@@ -21,19 +21,19 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"
+        <activity android:name="org.l3.android.ccbuptserviceadmin.MainActivity"
                   android:launchMode="singleTop"/>
-        <activity android:name=".NoticeActivity" android:label=""
-                  android:parentActivityName=".MainActivity">
+        <activity android:name="org.l3.android.ccbuptserviceadmin.NoticeActivity" android:label=""
+                  android:parentActivityName="org.l3.android.ccbuptserviceadmin.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value="org.l3.android.ccbuptserviceadmin.MainActivity"/>
         </activity>
-        <activity android:name=".QueueDetailActivity" android:label=""
-                  android:parentActivityName=".MainActivity">
+        <activity android:name="org.l3.android.ccbuptserviceadmin.QueueDetailActivity" android:label=""
+                  android:parentActivityName="org.l3.android.ccbuptserviceadmin.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value="org.l3.android.ccbuptserviceadmin.MainActivity"/>
         </activity>
     </application>
 

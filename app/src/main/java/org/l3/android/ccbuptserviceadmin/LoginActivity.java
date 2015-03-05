@@ -1,11 +1,9 @@
-package com.l3.android.ccbuptserviceadmin;
+package org.l3.android.ccbuptserviceadmin;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 
 import android.os.Build;
@@ -263,7 +261,7 @@ public class LoginActivity extends BaseActivity {
             Writer writer = null;
             try {
                 OutputStream out = LoginActivity.this
-                        .openFileOutput(getString(R.string.saved_authority_file_name), Context.MODE_PRIVATE);
+                        .openFileOutput(getString(R.string.saved_authority_file_name), MODE_PRIVATE);
                 writer = new OutputStreamWriter(out);
                 writer.write(authorityJsonString);
             } finally {
