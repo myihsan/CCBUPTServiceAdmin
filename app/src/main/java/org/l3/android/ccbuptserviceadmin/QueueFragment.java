@@ -68,7 +68,7 @@ public class QueueFragment extends Fragment {
             int adminId = PreferenceManager.getDefaultSharedPreferences(getActivity())
                     .getInt(getString(R.string.logged_admin_id), -1);
             if (adminId != -1) {
-                return new DataFetcher(getActivity()).fetchQueueByAdminId(getActivity(), adminId);
+                return new DataFetcher(getActivity()).fetchQueueByAdminId(adminId);
             }
             return false;
         }
@@ -85,27 +85,6 @@ public class QueueFragment extends Fragment {
     private class NextQueuerTask extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected Boolean doInBackground(Void... params) {
-//            boolean flag=false;
-//            int adminId = PreferenceManager.getDefaultSharedPreferences(getActivity())
-//                    .getInt(getString(R.string.logged_admin_id), -1);
-//            if (adminId == -1) {
-//                return false;
-//            }
-//            String fetchUrl = getString(R.string.root_url)+"nextqueuer.php";
-//            String url = Uri.parse(fetchUrl).buildUpon()
-//                    .appendQueryParameter("adminId", String.valueOf(adminId))
-//                    .build().toString();
-//            try {
-//                String result = new DataFetcher(getActivity()).getUrl(url);
-//                Log.d(TAG, result);
-//                if (result.equals("succeed")) {
-//                    flag = true;
-//                }
-//            } catch (IOException ioe) {
-//                Log.e(TAG, "Failed to fetch URL: ", ioe);
-//            }
-//            return flag;
-
             int adminId = PreferenceManager.getDefaultSharedPreferences(getActivity())
                     .getInt(getString(R.string.logged_admin_id), -1);
             return new DataFetcher(getActivity()).fetchNextQueuerResult(adminId);

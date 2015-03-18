@@ -13,5 +13,7 @@
     <string name="queue_next_one">下一位</string>
     <string name="queue_detail">排队详情</string>
     <string name="saved_authority_file_name">authority.json</string>
+
+    <!-- 请求的根地址 -->
     <string name="root_url">http://10.168.1.124/CCBUPTService/</string>
 </resources>

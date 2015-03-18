@@ -81,7 +81,7 @@ public class DataFetcher {
         }
     }
 
-    public boolean fetchQueueByAdminId(Context context, int adminId) {
+    public boolean fetchQueueByAdminId(int adminId) {
         String fetchUrl = mContext.getString(R.string.root_url) + "queue.php";
         String url = Uri.parse(fetchUrl).buildUpon()
                 .appendQueryParameter("adminId", String.valueOf(adminId))
@@ -89,7 +89,7 @@ public class DataFetcher {
         try {
             String jsonString = getUrl(url);
             Log.i(TAG, jsonString);
-            parseQueue(context, jsonString);
+            parseQueue(jsonString);
             return true;
         } catch (IOException ioe) {
             Log.e(TAG, "Failed to fetch URL: ", ioe);
@@ -100,7 +100,7 @@ public class DataFetcher {
         }
     }
 
-    private void parseQueue(Context context, String jsonString) throws JSONException {
+    private void parseQueue(String jsonString) throws JSONException {
         JSONObject queueObject = new JSONObject(jsonString);
         String title = queueObject.getString("title");
         int nextNumber = queueObject.getInt("nextNumber");
@@ -111,7 +111,7 @@ public class DataFetcher {
             Queuer queuer = new Queuer(queuerArray.getJSONObject(i));
             queuers.add(queuer);
         }
-        Queue.get(context).refreshQueuer(title, nextNumber, total, queuers);
+        Queue.get(mContext).refreshQueuer(title, nextNumber, total, queuers);
     }
 
     public String fetchLoginResult(String username, String password) {

@@ -141,7 +141,7 @@ public class MainActivity extends BaseActivity implements MaterialTabListener {
                 case 0:
                     return "通知";
                 case 1:
-                    return "排队";
+                    return "队列";
             }
             return null;
         }
